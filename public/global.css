@@ -1,0 +1,53 @@
+body {
+  font-size: medium;
+  font-family: Consolas, "Courier New", Courier, monospace;
+}
+.wrapper-status {
+  font-size: smaller;
+  border: 1px solid blueviolet;
+  border-radius: 10px;
+  margin: 1em;
+  padding: .25rem;
+  .mt-1 {
+    margin-top: 1em;
+  }
+  .mt-2 {
+    margin-top: 2em;
+  }
+  h1,h3 {
+    padding: 0;
+    margin: 0;
+  }
+  h1 {
+    color: blueviolet;
+    margin-top: .2rem;
+  }
+  h3 {
+    color: rgb(54, 69, 184);
+    margin-top: .2rem;
+  }
+  .icon {
+    width: 48px;
+    height: 48px;
+    color: blueviolet;
+    margin-right: .25em;
+  }
+  .grille {
+    display: grid;
+    grid-template-columns: minmax(auto, 150px) 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    margin-block: .25rem;
+  }
+  .grille > :nth-child(even) {
+    /* Styles pour les éléments de la 2e colonne */
+    color: rgb(8, 168, 126);
+  }
+  .flex-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+  }
+  
+}
+

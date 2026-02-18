@@ -1,0 +1,2 @@
+
+curl -X GET https://api.github.com/repos/shaan-Mx/myStorage/contents/json/products.json -L -H "Accept: application/vnd.github.object" -H "Authorization: Bearer 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" -H "X-GitHub-Api-Version: 2022-11-28"

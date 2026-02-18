@@ -1,0 +1,206 @@
+[
+  {
+    "id": "14ea3aef",
+    "title": "Generic Soft Keyboard",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Ratione eaque consectetur rerum rerum voluptatem. Ab doloremque aut eaque velit enim ut. Consectetur voluptatem esse dolorem placeat possimus qui quod autem. Dolor enim iste rerum. Illum necessitatibus dolore quae quia pariatur consequatur facilis saepe veritatis. Consequatur odit architecto.",
+    "images": ["product_14ea3aef_1.jpg", "product_14ea3aef_3.jpg", "product_14ea3aef_2.jpg"],
+    "variants": [
+      {
+        "id": "22e30edf-a31c-4e9d-9123-5102c0b1df57",
+        "quantity": 5,
+        "title": "Rubber",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Rubber"
+      },
+      {
+        "id": "69033ac8-8320-4e6b-87ae-70d07b112098",
+        "quantity": 3,
+        "title": "Wooden",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Wooden"
+      },
+      {
+        "id": "ae7f5a3a-7267-43d7-8d0c-c73f2d33352a",
+        "quantity": 2,
+        "title": "Soft",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Soft"
+      },
+      {
+        "id": "d4be930f-d8cb-4872-9a26-991ec93f0324",
+        "quantity": 4,
+        "title": "Cotton",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Cotton"
+      },
+      {
+        "id": "7f4ee39f-55a4-4df1-99be-2092cd91bc25",
+        "quantity": 4,
+        "title": "Metal",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Metal"
+      },
+      {
+        "id": "768b2f6f-bad8-4d3b-8bcb-dc579abb9935",
+        "quantity": 7,
+        "title": "Wooden",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Wooden"
+      },
+      {
+        "id": "54439cd4-44bf-41f8-b5f3-f366ffaba356",
+        "quantity": 2,
+        "title": "Granite",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Granite"
+      },
+      {
+        "id": "43da0a91-c23a-4b0b-88d0-e67cc5a8697c",
+        "quantity": 0,
+        "title": "Frozen",
+        "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Frozen"
+      }
+    ],
+    "price": "190.00",
+    "tags": [
+      "Gorgeous",
+      "Rustic",
+      "Ergonomic",
+      "Unbranded",
+      "Rustic",
+      "Sleek",
+      "Awesome",
+      "Incredible"
+    ]
+  },
+  {
+    "id": "b2d3f4f7",
+    "title": "Unbranded Fresh Ball",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Natus corporis rerum consectetur doloribus. Molestiae quis sunt vitae maiores nam quaerat possimus. Veniam porro aut sit sunt dolor quod reiciendis quidem. Est labore rem sed quis aperiam. Esse saepe ullam dolore aspernatur nobis fugit natus. Dolorem sequi qui quisquam adipisci aliquid.",
+    "images": ["product_b2d3f4f7_1.jpg", "product_b2d3f4f7_2.jpg"],
+    "variants": [
+      {
+        "id": "7bafd54a-2bc0-4be3-bc5f-d707924f95ee",
+        "quantity": 1,
+        "title": "Cotton",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Cotton"
+      },
+      {
+        "id": "329694ba-6dc3-4043-8438-d21e84e2ec4f",
+        "quantity": 2,
+        "title": "Rubber",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Rubber"
+      },
+      {
+        "id": "ab307f3d-9e30-4421-b3bf-6b26bb1bb480",
+        "quantity": 5,
+        "title": "Fresh",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Fresh"
+      },
+      {
+        "id": "f88efaf5-a642-4aa5-81f2-20962d473f5b",
+        "quantity": 1,
+        "title": "Cotton",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Cotton"
+      },
+      {
+        "id": "0284f218-c8dd-4e7f-9ec3-5bbc69d41047",
+        "quantity": 0,
+        "title": "Granite",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Granite"
+      },
+      {
+        "id": "c0626479-72c9-4e0c-ba12-8ed108e47732",
+        "quantity": 8,
+        "title": "Soft",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Soft"
+      },
+      {
+        "id": "a9b71959-08c4-4cd0-99dd-5956f3109944",
+        "quantity": 2,
+        "title": "Granite",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Granite"
+      },
+      {
+        "id": "43928292-a4fc-4f25-95a8-74c35e604c4f",
+        "quantity": 6,
+        "title": "Wooden",
+        "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Wooden"
+      }
+    ],
+    "price": "151.00",
+    "tags": [
+      "Tasty",
+      "Refined",
+      "Intelligent",
+      "Awesome",
+      "Small",
+      "Small",
+      "Unbranded",
+      "Unbranded"
+    ]
+  },
+  {
+    "id": "18bf4001-0535-48d6-9699-1eb0a1964345",
+    "title": "Ergonomic Metal Keyboard",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Incidunt id sint non consequatur dolor amet quaerat animi voluptatem. Sed ut quia ut magnam. Est excepturi perferendis est. Illum ipsum illum. Odio voluptatem distinctio occaecati temporibus sapiente qui et consequuntur.",
+    "images": ["product_18bf4001_1.jpg", "product_18bf4001_2.jpg", "product_18bf4001_3.jpg"],
+    "variants": [
+      {
+        "id": "57fdf6e8-9181-4407-9d02-8a0202ffbd0c",
+        "quantity": 2,
+        "title": "Plastic",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Plastic"
+      },
+      {
+        "id": "91e438de-13dd-4826-9df7-84ede8f4d888",
+        "quantity": 5,
+        "title": "Rubber",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Rubber"
+      },
+      {
+        "id": "98d64fd4-dc5b-45ad-a9a8-0e41cd338097",
+        "quantity": 8,
+        "title": "Concrete",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Concrete"
+      },
+      {
+        "id": "69760150-dee0-487a-a7d6-c67bea9fd041",
+        "quantity": 2,
+        "title": "Rubber",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Rubber"
+      },
+      {
+        "id": "8291ead9-e723-4dfa-b302-70c1a2f49fd2",
+        "quantity": 6,
+        "title": "Cotton",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Cotton"
+      },
+      {
+        "id": "b27f1d5d-d33c-4bcf-a9b6-7e72ae4097cd",
+        "quantity": 6,
+        "title": "Frozen",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Frozen"
+      },
+      {
+        "id": "4a05faf6-ff30-439a-8ee3-8300da3f7c2e",
+        "quantity": 2,
+        "title": "Rubber",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Rubber"
+      },
+      {
+        "id": "6cd03b99-2e84-4425-9817-c565582ac957",
+        "quantity": 6,
+        "title": "Plastic",
+        "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Plastic"
+      }
+    ],
+    "price": "82.00",
+    "tags": [
+      "Handmade",
+      "Practical",
+      "Sleek",
+      "Gorgeous",
+      "Handmade",
+      "Rustic",
+      "Awesome",
+      "Fantastic"
+    ]
+  }
+]
