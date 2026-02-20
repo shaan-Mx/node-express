@@ -17,6 +17,7 @@
  *   npx tsx scripts/sample-github.ts list
  *   npx tsx scripts/sample-github.ts list:public
  *   npx tsx scripts/sample-github.ts read src/data/products.json
+ *   npx tsx src/scripts/sample-github.ts write json/products.json --write
  *   npx tsx scripts/sample-github.ts all
  */
 

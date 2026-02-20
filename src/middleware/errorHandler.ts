@@ -24,7 +24,7 @@ export const errorHandler = (
   // Si c'est une AppError personnalisée
   if (err instanceof AppError) {
     sendError(
-      res,
+      res, 
       {
         message: err.message,
         code: err.code,

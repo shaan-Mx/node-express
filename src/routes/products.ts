@@ -9,9 +9,7 @@ import { applyCriteria, type SearchCriteria } from '../utils/query'
 import { searchRateLimiter } from '../middleware/rateLimiter'
 import { asyncHandler } from '../middleware/errorHandler'
 import { validate } from '../middleware/validate'
-import { CreateProductSchema, UpdateProductSchema } from '../schemas/product.schema'
-
-
+import { CreateProductSchema, UpdateProductSchema } from '../validation/zod/product.schema'
 
 // ✅ Import des helpers de réponse standardisés.  //sendNotFoundError,  //sendServerError,
 import { sendSuccess, sendSuccessSimple, sendCreated, sendDeleted, createPaginationMeta } from '../utils/response'

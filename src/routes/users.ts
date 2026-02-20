@@ -9,7 +9,7 @@ import { applyCriteria, type SearchCriteria } from '../utils/query'
 import { searchRateLimiter } from '../middleware/rateLimiter'
 import { asyncHandler } from '../middleware/errorHandler'
 import { validate } from '../middleware/validate'
-import { CreateUserSchema, UpdateUserSchema } from '../schemas/user.schema'
+import { CreateUserSchema, UpdateUserSchema } from '../validation/zod/user.schema'
 
 
 // ✅ Import des helpers de réponse standardisés.  //sendNotFoundError,  //sendServerError,
@@ -45,9 +45,7 @@ router.get(
       throw new FileReadError(DATA_FILE);
     }
     // Récupérer les paramètres de pagination
-    const limit = req.query.limit
-      ? parseInt(req.query.limit as string)
-      : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
     const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
     // Appliquer la pagination si limit est défini
     let paginatedData = data;
@@ -74,7 +72,7 @@ router.get(
     if (!data) {
       throw new FileReadError(DATA_FILE);
     }
-    const userId = parseInt(String(req.params.id));
+    const userId = String(req.params.id);
     const user = data.find((u: User) => u.id === userId);
     if (!user) {
       // ✅ Utilise l'erreur personnalisée
@@ -131,7 +129,7 @@ router.put(
     if (!data) {
       throw new FileReadError(DATA_FILE);
     }
-    const userId = parseInt(String(req.params.id));
+    const userId = String(req.params.id);
     const index = data.findIndex((u: User) => u.id === userId);
     if (index === -1) {
       throw new NotFoundError("User", userId);
@@ -161,7 +159,7 @@ router.delete(
     if (!data) {
       throw new FileReadError(DATA_FILE);
     }
-    const userId = parseInt(String(req.params.id));
+    const userId = String(req.params.id);
     const index = data.findIndex((u: User) => u.id === userId);
     if (index === -1) {
       throw new NotFoundError("User", userId);

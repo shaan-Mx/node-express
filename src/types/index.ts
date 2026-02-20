@@ -12,13 +12,13 @@ export interface Product {
   images: string[]
   category: string
   variants: Variant[]
-  price: number
+  price: string
   tags: string[]
 }
 
 // USER
 export interface User {
-  id: number
+  id: string
   name: string
   email: string
   created_at?: string

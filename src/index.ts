@@ -29,6 +29,7 @@ const ejsRenderStatus = (req: Request, res: Response) => {
   res.render("status", {
     status: "OK",
     dataSource: process.env.DATA_SOURCE || "local",
+    productsPath: process.env.PRODUCTS_FILE_PATH || 'undefined',
     startedAt: startedAt,
   })
 }

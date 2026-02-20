@@ -1,38 +1,36 @@
-// src/middmeware/validate.ts
+// src/middleware/validate.ts
+// Middleware générique
+// fonctionne avec Zod ET Valibot grâce à l'interface Schema<T> commune (validation/types.ts)
+
 import type { Request, Response, NextFunction } from 'express'
-import { ZodType, ZodError } from 'zod'
+import type { Schema } from '../validation/types.ts'
 
 /**
- * Middleware factory : valide req.body avec le schéma Zod fourni.
- * En cas d'erreur, retourne 400 avec le détail des champs invalides.
- *
  * Usage dans une route :
- *   router.post('/', validate(CreateProductSchema), async (req, res) => { ... })
+ *   import { CreateProductSchema } from '../validation/index.js'
+ *   router.post('/', validate(CreateProductSchema), asyncHandler(...))
+ *
+ * Le middleware ne sait pas si c'est Zod ou Valibot
+ * Il utilise uniquement l'interface Schema<T> commune.
  */
-export function validate<T>(schema: ZodType<T>) {
-  return (req: Request, res: Response, next: NextFunction): void => {
-    const result = schema.safeParse(req.body)
+export function validate<T>(schema: Schema<T>) {
+  return (
+    req: Request, 
+    res: Response, 
+    next: NextFunction
+  ): void => {
+    const result = schema.parse(req.body)
+    // failure
     if (!result.success) {
-      const errors = formatZodErrors(result.error)
       res.status(400).json({
-        error:   'Validation failed',
-        details: errors,
+        error: 'Validation failed',
+        details: result.errors,
       })
       return
     }
-    // Remplace req.body par les données validées et coercées par Zod
+    // success
+    // req.body remplacé par les données validées et coercées
     req.body = result.data
     next()
   }
-}
-
-// ── Formateur d'erreurs lisible ───────────────────────────────────────────────
-function formatZodErrors(error: ZodError): Record<string, string[]> {
-  const formatted: Record<string, string[]> = {}
-  for (const issue of error.issues) {
-    const field = issue.path.join('.') || '_root'
-    if (!formatted[field]) formatted[field] = []
-    formatted[field].push(issue.message)
-  }
-  return formatted
 }

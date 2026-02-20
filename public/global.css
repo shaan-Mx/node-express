@@ -43,11 +43,25 @@ body {
     /* Styles pour les éléments de la 2e colonne */
     color: rgb(8, 168, 126);
   }
-  .flex-row {
+  .wrapper-files {
     display: flex;
     flex-direction: row;
-    gap: 1em;
+    gap: .5em;
   }
-  
+  .file {
+    display: flex;
+    flex-direction: column;
+    padding: .2em 1em;
+    border-radius: 10px;
+    background-color: bisque;
+    a {
+      font-size:larger;
+      font-family: Consolas, 'Courier New', Courier, monospace;
+      text-decoration: none;
+    }
+    span {
+      font-size:x-small;
+    }
+  }
 }
 

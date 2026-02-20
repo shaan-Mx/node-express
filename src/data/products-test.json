@@ -3,5 +3,41 @@
     "id": "lb5W3iLLv0Ss",
     "title": "Test",
     "category": "test"
+  },
+  {
+    "id": "PIpKuCtogCYZ",
+    "title": "sss",
+    "description": "gfdg",
+    "category": "Vêtements",
+    "price": "100",
+    "images": [
+      "https://monsite.fr/imagelogo.png"
+    ],
+    "tags": [],
+    "variants": []
+  },
+  {
+    "id": "x0Em6qCZmHgo",
+    "title": "aaaaa",
+    "description": "aaaaa",
+    "category": "Chaussures",
+    "price": "200",
+    "images": [
+      "https://monsite.fr/imagelogo.png"
+    ],
+    "tags": [],
+    "variants": []
+  },
+  {
+    "id": "T58RLCKmkmxJ",
+    "title": "encore 1",
+    "description": "xqg dfqgq",
+    "category": "Accessoires",
+    "price": "5000",
+    "images": [
+      "https://monsite.fr/imagelogo.png"
+    ],
+    "tags": [],
+    "variants": []
   }
 ]
