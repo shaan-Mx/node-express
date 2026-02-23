@@ -1,3 +1,4 @@
+// src/types/api.ts
 /**
  * Types pour les réponses API standardisées
  */
@@ -10,17 +11,18 @@ export interface ApiError {
   code: string
   details?: any
 }
-
 /**
  * Métadonnées de pagination
  */
 export interface PaginationMeta {
-  total: number
-  limit: number
-  offset: number
-  hasMore: boolean
+  total:      number   // total d'éléments
+  limit:      number   // éléments par page
+  offset:     number   // position de départ
+  page:       number   // ✅ page courante
+  totalPages: number   // ✅ nombre total de pages
+  hasMore:    boolean  // il y a une page suivante
+  hasPrev:    boolean  // ✅ il y a une page précédente
 }
-
 /**
  * Réponse API générique avec succès
  */
@@ -29,7 +31,6 @@ export interface ApiSuccessResponse<T = any> {
   data: T
   meta?: PaginationMeta
 }
-
 /**
  * Réponse API générique avec erreur
  */
@@ -49,33 +50,27 @@ export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse
  * Codes d'erreur standardisés
  */
 export enum ErrorCode {
-  
-  // Erreurs de validation
+  //------------------ Erreurs de validation
   VALIDATION_ERROR = 'VALIDATION_ERROR',
   INVALID_INPUT = 'INVALID_INPUT',
   MISSING_REQUIRED_FIELD = 'MISSING_REQUIRED_FIELD',
-  
-  // Erreurs de ressources
+  //------------------ Erreurs de ressources
   NOT_FOUND = 'NOT_FOUND',
   ALREADY_EXISTS = 'ALREADY_EXISTS',
-  
-  // Erreurs serveur
+  //------------------ Erreurs serveur
   INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
   DATABASE_ERROR = 'DATABASE_ERROR',
   FILE_READ_ERROR = 'FILE_READ_ERROR',
   FILE_WRITE_ERROR = 'FILE_WRITE_ERROR',
-  
-  // Erreurs d'authentification/autorisation
+  //------------------ Erreurs d'authentification/autorisation
   UNAUTHORIZED = 'UNAUTHORIZED',
   FORBIDDEN = 'FORBIDDEN',
-  
-  // Erreurs de limite
+  //------------------ Erreurs de limite
   RATE_LIMIT_EXCEEDED = 'RATE_LIMIT_EXCEEDED',
   WRITE_RATE_LIMIT_EXCEEDED = 'WRITE_RATE_LIMIT_EXCEEDED',
   SEARCH_RATE_LIMIT_EXCEEDED = 'SEARCH_RATE_LIMIT_EXCEEDED',
 
 }
-
 /**
  * Messages d'erreur par défaut pour chaque code
  */

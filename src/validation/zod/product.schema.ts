@@ -17,9 +17,10 @@ const ProductSchema = z.object({
   title:       z.string().min(1, { message: 'Title is required' }).max(200),
   description: z.string().min(1, { message: 'Description is required' }),
   category:    z.string().min(1, { message: 'Category is required' }),
-  price:       z.string().regex(/^\d+(\.\d{1,2})?$/, { message: 'Price must be a valid decimal string (e.g. "19.99")' }),
+  //price:       z.string().regex(/^\d+(\.\d{1,2})?$/, { message: 'Price must be a valid decimal string (e.g. "19.99")' }),
   //price:       z.number().positive({ message: 'Price must be a positive number' }),
-  images:      z.array(z.string()).min(1, { message: 'At least one image is required' }),
+  price:       z.number().min(0, 'Price must be a positive number').multipleOf(0.01, 'Price must have at most 2 decimal places'),
+  images:      z.array(z.url()).min(1, { message: 'At least one image is required' }),
   tags:        z.array(z.string()).default([]),
   variants:    z.array(VariantSchema).default([]),
 })

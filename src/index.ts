@@ -1,5 +1,6 @@
 
-import './config/env' // ✅ EN PREMIER, avant TOUT autre import
+//import './config/env' // ✅ EN PREMIER, avant TOUT autre import
+import { config } from './config/env'
 
 import express from "express"
 import type { Request, Response } from "express"
@@ -8,24 +9,28 @@ import path from 'path'
 import cors from "cors"
 import { fileURLToPath } from "url"
 
-// ✅ Import des nouveaux middlewares Phase 1
+import { logger } from './utils/logger/index'
+
+import { createHttpLogger } from './middleware/httpLogger'
 import { securityMiddleware, sanitizeInput } from "./middleware/security"
 import { globalRateLimiter, writeRateLimiter } from "./middleware/rateLimiter"
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler"
+
+import productsRouter from "./routes/products"
+import usersRouter from "./routes/users"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const startedAt = new Date().toLocaleString()   // toISOString()
 
 const app = express()
-const PORT = process.env.PORT || 3010
+const PORT = config.port || 3000
 
-// Configuration EJS
-app.set("view engine", "ejs")
+
+// HandleBars
+app.set('view engine', 'hbs')
 app.set("views", path.join(__dirname, "views"))
-// EJS common views
-const ejsRenderStatus = (req: Request, res: Response) => {
-  // src/views/status.ejs
+const viewStatus = (req: Request, res: Response) => {
   res.render("status", {
     status: "OK",
     dataSource: process.env.DATA_SOURCE || "local",
@@ -41,13 +46,10 @@ const ejsRenderStatus = (req: Request, res: Response) => {
 // ========================================
 // ✅ PHASE 1: MIDDLEWARES DE SÉCURITÉ
 // ========================================
-
 // 1. Helmet - Sécurisation des headers HTTP
 app.use(securityMiddleware)
-
 // 2. Static files (avant CORS) // Adapt for the correct directory
 app.use(express.static("public"))
-
 // 3. CORS - Configuration des origines autorisées
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*', // En prod: spécifier les domaines autorisés
@@ -55,26 +57,22 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
-
 // 4. Body parser
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
-
 // 5. Sanitization des inputs
 app.use(sanitizeInput)
-
 // 6. Rate limiting global
 app.use(globalRateLimiter)
+// 7. logger - HTTP logger
+const httpLogger = await createHttpLogger()
+app.use(httpLogger)                                       
 
 // ========================================
 // 🔒 ROUTES 
 // ========================================
-import productsRouter from "./routes/products"
-import usersRouter from "./routes/users"
-
 // Products Routes (avec rate limiter d'écriture)
 app.use("/api/products", writeRateLimiter, productsRouter)
-
 // Users Routes (avec rate limiter d'écriture)
 app.use("/api/users", writeRateLimiter, usersRouter)
 
@@ -86,43 +84,76 @@ app.get(['/api/config/data','/config/data'], (req, res) => {
   });
 });
 
-// Status Route
-app.get("/", ejsRenderStatus)
-app.get("/status", ejsRenderStatus)
-app.get("/api/status", ejsRenderStatus)
+// Health check
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() })
+})
+
+// Status Route (template)
+app.get("/", viewStatus)
+app.get("/status", viewStatus)
+app.get("/api/status", viewStatus)
 
 // ========================================
-// ✅ PHASE 1: GESTION D'ERREURS
+// ✅ PHASE 2: GESTION D'ERREURS
 // ========================================
 
 // 404 - Route non trouvée (doit être après toutes les routes)
 app.use(notFoundHandler)
-// Middleware de gestion d'erreurs global (doit être en dernier)
+// 500 - Middleware de gestion d'erreurs global (doit être en dernier)
 app.use(errorHandler)
 
 // ========================================
 // 🔒 Start server 
 // ========================================
 const logDataSource = () => {
-  if (process.env.DATA_SOURCE === 'local') {
-    return `📊 Data source: LOCAL`
+  switch (config.dataSource) {
+    case 'local':
+      return `📊 Data source : LOCAL\n       Path : ${config.local.productsFilePath}`
+    case 'github':
+      return `📊 Data source : GITHUB\n   Owner : ${config.github.owner}\n   Repo / Branch : ${config.github.repo} / ${config.github.branch}`
+    default:
+      return `📊 Data source : UNKNOWN (${config.dataSource})`
   }
-  if (process.env.DATA_SOURCE === 'github') {
-    return `📊 Data source: GITHUB
-      Owner: ${process.env.GITHUB_OWNER}
-      Repo/Branch: ${process.env.GITHUB_REPO} / ${process.env.GITHUB_BRANCH}
-    `
-  }
-  return `📊 Data source: ERROR`
 }
-app.listen(PORT, () => {
+const logOs = () => {
+  return `📊 OS :
+       EOL: ${config.os.EOL_frm}
+       machine: ${config.os.machine} | ${config.os.platform}
+  `
+}
+const server = app.listen(PORT, () => {
   console.log(`✅ Server API
     http://localhost:${PORT}
-    🔒 Security: Helmet ✓, Rate Limiter ✓
-    🛡️  Protection: Sanitization ✓, Error Handler ✓
+    🔒 Security   : Helmet ✓, Rate Limiter ✓
+    🛡️  Protection : Sanitization ✓, Error Handler ✓
+    📝 Logger     : ${process.env.LOGGER?.toUpperCase() || 'PINO'}
     ~..........................~
-    startedAt: ${startedAt}
+    startedAt     : ${startedAt}
     ${logDataSource()}
-    📊 Products: ${process.env.PRODUCTS_FILE_PATH || "src/data/products.json"}
+    ~..........................~
+    ${logOs()}
   `)
+   // ✅ logger structuré pour monitoring / alerting
+  logger.info('Server started', {port: config.port, env: config.nodeEnv})
 })
+
+// ── Gestion des erreurs process ───────────────────────────────────────────────
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught Exception — shutting down', { error: err.message, stack: err.stack })
+  process.exit(1)
+})
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled Rejection — shutting down', { reason: String(reason) })
+  process.exit(1)
+})
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received. Graceful shutdown')
+  server.close(() => { logger.info('Server closed'); process.exit(0) })
+})
+process.on('SIGINT', () => {
+  logger.info('SIGINT received — Graceful shutdown')
+  server.close(() => { logger.info('Server closed'); process.exit(0) })
+})
+
+export default app

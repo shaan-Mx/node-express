@@ -2,34 +2,41 @@
 
 import dotenv from 'dotenv'
 import path from 'path'
-import { fileURLToPath } from 'url'
+
+import os from 'os'
 
 // ✅ Charger .env immédiatement au premier import de ce module
-dotenv.config({ 
-  path: path.resolve(process.cwd(), '.env')
-})
-
-// ✅ Debug : Afficher les variables chargées
-/*
-console.log('🔍 Environment loaded from .env:')
-console.log('   PORT:', process.env.PORT || '❌ undefined')
-console.log('   PRODUCT_ID_METHOD:', process.env.PRODUCT_ID_METHOD || '❌ undefined')
-console.log('   PRODUCTS_FILE_PATH:', process.env.PRODUCTS_FILE_PATH || '❌ undefined')
-console.log('   USERS_FILE_PATH:', process.env.USERS_FILE_PATH || '❌ undefined')
-console.log('')
-*/
+dotenv.config({ path: path.resolve(process.cwd(), '.env') })
 
 export type DataSource = 'local' | 'github' 
 export type ValidationLibrary = 'zod' | 'valibot'
+export type LoggerLib = 'pino' | 'winston'
 
 export const config = {
+  os: {
+    EOL: os.EOL,
+    EOL_frm: JSON.stringify(os.EOL),
+    machine: os.machine,
+    homeDir: os.homedir(),
+    platform: os.platform(),
+  },
   port: parseInt(process.env.PORT || '3001'),
   nodeEnv: process.env.NODE_ENV || 'development',
   dataSource: process.env.DATA_SOURCE || 'local',
   validationLib: (process.env.VALIDATION_LIB || 'zod') as ValidationLibrary,
+  log: {
+    enabled: (process.env.LOG_ENABLED || 'false') === 'true',
+    lib: (process.env.LOG || 'pino') as LoggerLib,
+    toFile: process.env.LOG_TO_FILE === 'true',
+    folder: process.env.LOG_FOLDER || 'logs',
+  },
   corsOrigin: process.env.CORS_ORIGIN || '*',
   productIdMethod: process.env.PRODUCT_ID_METHOD || 'nanoid',
   userIdMethod: process.env.USER_ID_METHOD || 'nanoid',
+  pagination: {
+    defaultLimit: parseInt(process.env.PAGINATION_DEFAULT_LIMIT || '20'),
+    maxLimit: parseInt(process.env.PAGINATION_MAX_LIMIT || '100'),
+  },
   github: {
     owner: process.env.GITHUB_OWNER || '',
     repo: process.env.GITHUB_REPO || '',

@@ -4,7 +4,11 @@
     "title": "Generic Soft Keyboard",
     "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
     "description": "Ratione eaque consectetur rerum rerum voluptatem. Ab doloremque aut eaque velit enim ut. Consectetur voluptatem esse dolorem placeat possimus qui quod autem. Dolor enim iste rerum. Illum necessitatibus dolore quae quia pariatur consequatur facilis saepe veritatis. Consequatur odit architecto.",
-    "images": ["product_14ea3aef_1.jpg", "product_14ea3aef_3.jpg", "product_14ea3aef_2.jpg"],
+    "images": [
+      "product_14ea3aef_1.jpg",
+      "product_14ea3aef_3.jpg",
+      "product_14ea3aef_2.jpg"
+    ],
     "variants": [
       {
         "id": "22e30edf-a31c-4e9d-9123-5102c0b1df57",
@@ -55,7 +59,7 @@
         "sku": "14ea3aef-7afe-478e-98af-9e42e3b9f990-Frozen"
       }
     ],
-    "price": "190.00",
+    "price": 190,
     "tags": [
       "Gorgeous",
       "Rustic",
@@ -72,7 +76,10 @@
     "title": "Unbranded Fresh Ball",
     "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
     "description": "Natus corporis rerum consectetur doloribus. Molestiae quis sunt vitae maiores nam quaerat possimus. Veniam porro aut sit sunt dolor quod reiciendis quidem. Est labore rem sed quis aperiam. Esse saepe ullam dolore aspernatur nobis fugit natus. Dolorem sequi qui quisquam adipisci aliquid.",
-    "images": ["product_b2d3f4f7_1.jpg", "product_b2d3f4f7_2.jpg"],
+    "images": [
+      "product_b2d3f4f7_1.jpg",
+      "product_b2d3f4f7_2.jpg"
+    ],
     "variants": [
       {
         "id": "7bafd54a-2bc0-4be3-bc5f-d707924f95ee",
@@ -123,7 +130,7 @@
         "sku": "b2d3f4f7-5d71-44a9-b6b6-a025712897d3-Wooden"
       }
     ],
-    "price": "151.00",
+    "price": 151,
     "tags": [
       "Tasty",
       "Refined",
@@ -140,7 +147,11 @@
     "title": "Ergonomic Metal Keyboard",
     "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
     "description": "Incidunt id sint non consequatur dolor amet quaerat animi voluptatem. Sed ut quia ut magnam. Est excepturi perferendis est. Illum ipsum illum. Odio voluptatem distinctio occaecati temporibus sapiente qui et consequuntur.",
-    "images": ["product_18bf4001_1.jpg", "product_18bf4001_2.jpg", "product_18bf4001_3.jpg"],
+    "images": [
+      "product_18bf4001_1.jpg",
+      "product_18bf4001_2.jpg",
+      "product_18bf4001_3.jpg"
+    ],
     "variants": [
       {
         "id": "57fdf6e8-9181-4407-9d02-8a0202ffbd0c",
@@ -191,7 +202,7 @@
         "sku": "18bf4001-0535-48d6-9699-1eb0a1964345-Plastic"
       }
     ],
-    "price": "82.00",
+    "price": 82.5,
     "tags": [
       "Handmade",
       "Practical",
@@ -202,5 +213,162 @@
       "Awesome",
       "Fantastic"
     ]
+  },
+  {
+    "id": "df8a0bb7-c4cb-46a6-a36e-939fe42a6768",
+    "title": "Handcrafted Fresh Soap",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Debitis et esse minima iusto est praesentium minima et. Officiis consequuntur repellendus aut placeat. Accusantium et est similique. Quidem fugiat sed.",
+    "images": [
+      "product_df8a0bb7_4.jpg",
+      "product_df8a0bb7_5.jpg",
+      "product_df8a0bb7_6.jpg"
+    ],
+    "variants": [
+      {
+        "id": "3839c8ee-5300-4527-a462-218c1ff86df6",
+        "quantity": 2,
+        "title": "Fresh",
+        "sku": "df8a0bb7-c4cb-46a6-a36e-939fe42a6768-Fresh"
+      },
+      {
+        "id": "1a9cac3a-8822-407f-aaae-97e2551dd07d",
+        "quantity": 10,
+        "title": "Steel",
+        "sku": "df8a0bb7-c4cb-46a6-a36e-939fe42a6768-Steel"
+      },
+      {
+        "id": "4417b1e8-aa23-49cd-9800-625c17d4368f",
+        "quantity": 5,
+        "title": "Cotton",
+        "sku": "df8a0bb7-c4cb-46a6-a36e-939fe42a6768-Cotton"
+      }
+    ],
+    "price": 427,
+    "tags": [
+      "Fantastic",
+      "Tasty",
+      "Gorgeous"
+    ]
+  },
+  {
+    "id": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc",
+    "title": "Sleek Metal Shoes",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Laborum atque excepturi fugit nostrum eaque. Reiciendis quas repellendus id debitis distinctio incidunt. Cupiditate incidunt culpa. Dolore officia asperiores ipsa vero provident fugiat.",
+    "images": [
+      "product_4d723832_7.jpg",
+      "product_4d723832_8.jpg",
+      "product_4d723832_9.jpg"
+    ],
+    "variants": [
+      {
+        "id": "1531e513-6fa8-4c38-9466-e7615d264a45",
+        "quantity": 6,
+        "title": "Metal",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Metal"
+      },
+      {
+        "id": "c658297d-c11d-4a56-9d65-53b36e467f14",
+        "quantity": 1,
+        "title": "Frozen",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Frozen"
+      },
+      {
+        "id": "0414adf1-47f1-43b4-b0c7-548cd4a5c628",
+        "quantity": 2,
+        "title": "Concrete",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Concrete"
+      },
+      {
+        "id": "a32cf40e-84dd-464a-9713-874585720b4d",
+        "quantity": 8,
+        "title": "Fresh",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Fresh"
+      },
+      {
+        "id": "875e87a1-3f03-436b-904d-ae361390daec",
+        "quantity": 8,
+        "title": "Frozen",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Frozen"
+      },
+      {
+        "id": "61e83617-c212-4f99-a23c-713e99143534",
+        "quantity": 8,
+        "title": "Steel",
+        "sku": "4d723832-7ac3-4f32-9f3f-3ffd2b0eaedc-Steel"
+      }
+    ],
+    "price": 43,
+    "tags": [
+      "Rustic",
+      "Licensed",
+      "Ergonomic",
+      "Awesome",
+      "Small",
+      "Sleek"
+    ]
+  },
+  {
+    "id": "363e7e24-9e26-4e49-97fa-4a381ce8ec24",
+    "title": "Gorgeous Steel Pizza",
+    "category": "3dd19955-32de-4aa9-bd63-60c21070c1cc",
+    "description": "Dolor ad recusandae aliquam fuga quae consequatur. Libero dicta et ullam sed ea laudantium rerum et. Nisi sunt culpa eos ratione dignissimos deserunt minima debitis. Voluptatem enim debitis et qui fuga asperiores.",
+    "images": [
+      "product_363e7e24_10.jpg",
+      "product_363e7e24_11.jpg",
+      "product_363e7e24_12.jpg"
+    ],
+    "variants": [],
+    "price": 952,
+    "tags": []
+  },
+  {
+    "id": "ZAw454cZXha3",
+    "title": "Product 1771720525785",
+    "description": "Description",
+    "category": "Electronics",
+    "price": 109.99,
+    "images": [
+      "https://placehold.co/400x300?text=Product"
+    ],
+    "tags": [],
+    "variants": []
+  },
+  {
+    "id": "Jt2N0jV2182x",
+    "title": "Product 1771729325645",
+    "description": "Description",
+    "category": "Electronics",
+    "price": 99.99,
+    "images": [
+      "https://placehold.co/400x300?text=Product"
+    ],
+    "tags": [],
+    "variants": []
+  },
+  {
+    "id": "4jrokvT2IaRW",
+    "title": "Product 1771730597525",
+    "description": "Description",
+    "category": "Electronics",
+    "price": 99.99,
+    "images": [
+      "https://placehold.co/400x300?text=Product"
+    ],
+    "tags": [],
+    "variants": []
+  },
+  {
+    "id": "XUMFrcXVhPe8",
+    "title": "Product 1771730612469",
+    "description": "Description",
+    "category": "Electronics",
+    "price": 109.99,
+    "images": [
+      "https://placehold.co/400x300?text=Product"
+    ],
+    "tags": [],
+    "variants": []
   }
 ]

@@ -1,13 +1,64 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction, ErrorRequestHandler } from 'express'
 import { AppError } from '../utils/AppError'
 import { sendError, createError } from '../utils/response'
 import { ErrorCode } from '../types/api'
+import { logger } from '../utils/logger/index'
+
+/**
+ * Wrapper pour les handlers async
+ * Permet de catch automatiquement les erreurs des fonctions async
+ */
+export const asyncHandler = (fn: Function) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next)
+  }
+}
 
 /**
  * Middleware de gestion d'erreurs global
- * Doit être le dernier middleware dans la chaîne
+ * Doit être le dernier middleware dans la chaîne, dans src/index.ts
  */
-export const errorHandler = (
+export const errorHandler: ErrorRequestHandler = (
+  err: Error | AppError,
+  req: Request,
+  res: Response,
+  _next: NextFunction
+): void => {
+  
+  // ── Erreurs applicatives connues (AppError) ──
+  if (err instanceof AppError) {
+    logger.warn(`[${err.code}] ${err.message}`, {
+      method:     req.method,
+      url:        req.url,
+      statusCode: err.statusCode,
+    })
+    res.status(err.statusCode).json({
+      success: false,
+      error: {
+        message: err.message,
+        code:    err.code,
+      },
+    })
+    return
+  }
+
+  // ── Erreurs inattendues ──
+  logger.error(`Unhandled error: ${err.message}`, {
+    method: req.method,
+    url:    req.url,
+    stack:  err.stack,
+  })
+  res.status(500).json({
+    success: false,
+    error: {
+      message: 'Internal server error',
+      code:    ErrorCode.INTERNAL_SERVER_ERROR,
+    },
+  })
+}
+
+
+export const errorHandler_original = (
   err: Error | AppError,
   req: Request,
   res: Response,
@@ -71,22 +122,14 @@ export const errorHandler = (
  * Doit être placé après toutes les routes définies
  */
 export const notFoundHandler = (req: Request, res: Response): void => {
-  sendError(
-    res,
-    createError(
-      ErrorCode.NOT_FOUND,
-      `Route not found: ${req.method} ${req.url}`
-    ),
-    404
-  )
+  logger.error(`Route not found`, { method: req.method, url: req.url })
+  res.status(404).json({
+    success: false,
+    error: {
+      message: `Route ${req.method} ${req.url} not found`,
+      code:    ErrorCode.NOT_FOUND,
+    },
+  })
 }
 
-/**
- * Wrapper pour les handlers async
- * Permet de catch automatiquement les erreurs des fonctions async
- */
-export const asyncHandler = (fn: Function) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next)
-  }
-}
+

@@ -1,8 +1,15 @@
+// src/utils/response.ts
+/**
+ * Handling API Responses
+ */
+
 import type { Response } from 'express'
 import type { ApiSuccessResponse, ApiErrorResponse, PaginationMeta, ApiError } from '../types/api'
 import { ErrorCode, ErrorMessages } from '../types/api'
 
-/********************** handling errors **********************/
+/**
+ * Handling Error
+ */
 
 /**
  * Envoie une réponse d'erreur standardisée
@@ -83,7 +90,9 @@ export function sendServerError(
   )
 }
 
-/********************** handling success **********************/
+/**
+ * Handling Success
+ */
 
 /**
  * Envoie une réponse de succès, sans utilisation de data<T> ni PaginationMeta
@@ -100,7 +109,6 @@ export function sendSuccessSimple(
   }
   return res.status(statusCode).json(response)
 }
-
 /**
  * Envoie une réponse de succès standardisée, commune a plusieurs helpers
  * return res.status(200).json(response)
@@ -139,21 +147,28 @@ export function sendDeleted(
   return sendSuccess(res, { message }, 200)
 }
 
-/********************** handling metadata **********************/
+/**
+ * Handling Metadata
+ */
 
 /**
  * Helper pour créer des métadonnées de pagination
  * return { total, limit, offset, hasMore: offset + limit < total }
  */
 export function createPaginationMeta(
-  total: number,
-  limit: number,
+  total:  number,
+  limit:  number,
   offset: number
 ): PaginationMeta {
+  const totalPages = Math.max(1, Math.ceil(total / limit))
+  const page       = Math.floor(offset / limit) + 1
   return {
     total,
     limit,
     offset,
-    hasMore: offset + limit < total
+    page,                               // ✅ page courante
+    totalPages,                         // ✅ nombre total de pages
+    hasMore: offset + limit < total,    // ✅ il y a une page suivante
+    hasPrev: offset > 0,                // ✅ il y a une page précédente
   }
 }

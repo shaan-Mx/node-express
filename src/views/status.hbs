@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Server BackEnd</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.jade.min.css"
+    />
+    <link rel="stylesheet" href="/global.css" />
+  </head>
+  <body>
+    <div class="wrapper-status">
+      <h1>
+        <img src="/icon.svg" alt="" class="icon">
+        <span>Server BackEnd</span>
+      </h1>
+      <div class="grille">
+        <span>Status</span><span>{{ status }}</span> 
+        <span>Data Source</span><span>{{ dataSource }}</span>
+        <span>startedAt</span><span>{{ startedAt }}</span>
+      </div>
+      <h3>Json Files</h3>
+      <div class="wrapper-files">
+        <div class="file">
+          <a href="http://localhost:3001/api/products">Products</a>
+          <span>{{ productsPath }}</span>
+        </div> 
+        <div class="file">
+          <a href="http://localhost:3001/api/users">Users</a>
+          <span> </span>
+        </div> 
+      </div>
+    </div>
+  </body>
+</html>

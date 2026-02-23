@@ -15,7 +15,17 @@ const ProductSchema = v.object({
   title:       v.pipe(v.string(), v.minLength(1, 'Title is required'), v.maxLength(200)),
   description: v.pipe(v.string(), v.minLength(1, 'Description is required')),
   category:    v.pipe(v.string(), v.minLength(1, 'Category is required')),
-  price:       v.pipe(v.string(), v.regex(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal string (e.g. "19.99")')),
+  //price:       v.pipe(v.string(), v.regex(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal string (e.g. "19.99")')),
+  //price:       v.pipe(v.number(), v.minValue(0, 'Price must be a positive number')),
+  price: v.pipe(v.number(), v.minValue(0, 'Price must be a positive number'),
+    v.custom(
+      (value): value is number => {
+        if (typeof value !== 'number' || !Number.isFinite(value)) { return false } // On vérifie d'abord que c'est un nombre
+        return Math.round(value * 100) / 100 === value; // Puis on vérifie les 2 décimales
+      },
+      'Price must have at most 2 decimal places'
+    )
+  ),
   images:      v.pipe(v.array(v.string()), v.minLength(1, 'At least one image is required')),
   tags:        v.optional(v.array(v.string()), []),
   variants:    v.optional(v.array(VariantSchema), []),

@@ -45,7 +45,7 @@ export const readFromJson = async <T>(filePath: string): Promise<T[]> => {
         const raw = await fs.readFile(filePath, "utf-8")
         return JSON.parse(raw) as T[]
       } catch (error) {
-        console.error("❌ Erreur lecture fichier en mode local:", error)
+        console.error("❌ Erreur lecture fichier en mode local:\n", error)
         return []
       }
     }

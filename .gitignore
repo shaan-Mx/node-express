@@ -5,3 +5,5 @@ docs/
 .env.github
 .env.local
 *.log
+logs/
+!logs/.gitkeep
