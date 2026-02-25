@@ -13,6 +13,7 @@ import * as path from 'node:path'
 import { config } from '../config' // import de la config logger
 
 // ── Types ──
+
 type MetaLevel = 'warn' | 'error'
 interface MetaEntry {
   level: MetaLevel
@@ -22,6 +23,7 @@ interface MetaEntry {
 }
 
 // ── Helpers ──
+
 function buildEntry(level: MetaLevel, msg: string, err?: unknown): string {
   const entry: MetaEntry = {
     level,
@@ -47,6 +49,7 @@ function ensureDirSync(dir: string): void {
 }
 
 // ── Write ──
+
 function write(level: MetaLevel, msg: string, err?: unknown): void {
   const line = buildEntry(level, msg, err)
   // toujours écrire sur stderr en premier
@@ -61,6 +64,7 @@ function write(level: MetaLevel, msg: string, err?: unknown): void {
 }
 
 // ── Public interface ──
+
 export const meta = {
   warn(msg: string, err?: unknown): void {
     write('warn', msg, err)

@@ -21,6 +21,10 @@ import { meta } from './core/meta'
 import { getRequestId } from './middleware/request-context'
 import { setHttpLogger } from './middleware/express'
 
+import { createConsoleTransport } from './transports/console'
+import { createLevelTransport } from './transports/file-level'
+import { createNamedTransport } from './transports/file-named'
+
 export { httpLogger } from './middleware/express'
 export { createConsoleTransport } from './transports/console'
 export { createLevelTransport } from './transports/file-level'
@@ -112,3 +116,23 @@ export function createLogger(options: LoggerOptions): Logger {
 
   return logger
 }
+
+export const logger = createLogger({
+  transports: [
+    createConsoleTransport(),
+    createLevelTransport({ prefix: 'error-', level: 'error' }),
+    createLevelTransport({ prefix: 'info-',  level: 'info'  }),
+    createLevelTransport({ prefix: 'warn-',  level: 'warn'  }),
+    createNamedTransport({
+      name:    'trspHttp',
+      prefix:  'http-',
+      domains: ['http'],
+      levels:  ['info', 'warn', 'error']
+    }),
+    createNamedTransport({
+      name:    'trspService',
+      prefix:  'service-',
+      domains: ['service']
+    })
+  ]
+})

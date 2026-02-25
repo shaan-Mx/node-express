@@ -2,7 +2,8 @@ import type { Request, Response, NextFunction, ErrorRequestHandler } from 'expre
 import { AppError } from '../utils/AppError'
 import { sendError, createError } from '../utils/response'
 import { ErrorCode } from '../types/api'
-import { logger } from '../utils/logger/index'
+import { logger } from '../logger'
+
 
 /**
  * Wrapper pour les handlers async
@@ -16,7 +17,7 @@ export const asyncHandler = (fn: Function) => {
 
 /**
  * Middleware de gestion d'erreurs global
- * Doit être le dernier middleware dans la chaîne, dans src/index.ts
+ * ⚠️⚠️ IMPORTANT ⚠️⚠️ Doit être le dernier middleware dans la chaîne !!
  */
 export const errorHandler: ErrorRequestHandler = (
   err: Error | AppError,
@@ -27,11 +28,14 @@ export const errorHandler: ErrorRequestHandler = (
   
   // ── Erreurs applicatives connues (AppError) ──
   if (err instanceof AppError) {
+    /*
     logger.warn(`[${err.code}] ${err.message}`, {
       method:     req.method,
       url:        req.url,
       statusCode: err.statusCode,
     })
+    */
+    logger.error({ msg: 'AppError', errCode: err.code, errMessage: err.message, statusCode: err.statusCode, method: req.method, url: req.url })
     res.status(err.statusCode).json({
       success: false,
       error: {
@@ -43,11 +47,13 @@ export const errorHandler: ErrorRequestHandler = (
   }
 
   // ── Erreurs inattendues ──
+  /*
   logger.error(`Unhandled error: ${err.message}`, {
     method: req.method,
     url:    req.url,
     stack:  err.stack,
-  })
+  }) */
+  logger.error({ msg: 'Unhandled error', error: err.message, method: req.method, url: req.url })
   res.status(500).json({
     success: false,
     error: {
@@ -57,8 +63,25 @@ export const errorHandler: ErrorRequestHandler = (
   })
 }
 
+/**
+ * Middleware pour gérer les routes non trouvées (404)
+ * Doit être placé après toutes les routes définies
+ */
+export const notFoundHandler = (req: Request, res: Response): void => {
+  /*
+  logger.error(`Route not found`, { method: req.method, url: req.url })
+  */
+  logger.error({ msg: 'Route not found', errCode: ErrorCode.NOT_FOUND, method: req.method, url: req.url })
+  res.status(404).json({
+    success: false,
+    error: {
+      message: `Route ${req.method} ${req.url} not found`,
+      code:    ErrorCode.NOT_FOUND,
+    },
+  })
+}
 
-export const errorHandler_original = (
+export const errorHandler_obsolete = (
   err: Error | AppError,
   req: Request,
   res: Response,
@@ -116,20 +139,3 @@ export const errorHandler_original = (
     500
   )
 }
-
-/**
- * Middleware pour gérer les routes non trouvées (404)
- * Doit être placé après toutes les routes définies
- */
-export const notFoundHandler = (req: Request, res: Response): void => {
-  logger.error(`Route not found`, { method: req.method, url: req.url })
-  res.status(404).json({
-    success: false,
-    error: {
-      message: `Route ${req.method} ${req.url} not found`,
-      code:    ErrorCode.NOT_FOUND,
-    },
-  })
-}
-
-

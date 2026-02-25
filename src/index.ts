@@ -9,9 +9,13 @@ import path from 'path'
 import cors from "cors"
 import { fileURLToPath } from "url"
 
-import { logger } from './utils/logger/index'
+// see Phase 1 - 7bis
+// updated: errorHandler (OK), baseService (OK)
+import { logger, httpLogger } from './logger'
+import testLibLoggerRouter from "./logger/testLibRouting"
 
-import { createHttpLogger } from './middleware/httpLogger'
+// import { logger } from './utils/logger/index'
+// import { createHttpLogger } from './middleware/httpLogger'
 import { securityMiddleware, sanitizeInput } from "./middleware/security"
 import { globalRateLimiter, writeRateLimiter } from "./middleware/rateLimiter"
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler"
@@ -64,8 +68,10 @@ app.use(sanitizeInput)
 // 6. Rate limiting global
 app.use(globalRateLimiter)
 // 7. logger - HTTP logger
-const httpLogger = await createHttpLogger()
-app.use(httpLogger)                                       
+// const httpLogger = await createHttpLogger()
+//app.use(httpLogger)     
+// 7bis. === TEST ===. logger personalisé
+app.use(httpLogger({ inject: ['method', 'url'] }))
 
 // ========================================
 // 🔒 ROUTES 
@@ -93,6 +99,8 @@ app.get("/", viewStatus)
 app.get("/status", viewStatus)
 app.get("/api/status", viewStatus)
 
+// library logger tests 
+app.use("/test", testLibLoggerRouter)
 // ========================================
 // ✅ PHASE 2: GESTION D'ERREURS
 // ========================================
@@ -134,10 +142,17 @@ const server = app.listen(PORT, () => {
     ${logOs()}
   `)
    // ✅ logger structuré pour monitoring / alerting
-  //logger.info('Server started', {port: config.port, env: config.nodeEnv})
-  logger.warn('Server started', {port: config.port, env: config.nodeEnv})
+  ////////logger.info('Server started', {port: config.port, env: config.nodeEnv})
+  //logger.warn('Server started', {port: config.port, env: config.nodeEnv})
+  logger.info({ msg: 'server started', domain: 'service', port: PORT })
+  /*
+  logger.warn({ msg: 'server started', domain: 'service', port: PORT })
+  logger.error({ msg: 'server started', domain: 'service', port: PORT })
+  logger.trace({ msg: 'server started', domain: 'service', port: PORT })
+  */
 })
 
+/*
 // ── Gestion des erreurs process ───────────────────────────────────────────────
 process.on('uncaughtException', (err) => {
   logger.error('Uncaught Exception — shutting down', { error: err.message, stack: err.stack })
@@ -155,5 +170,6 @@ process.on('SIGINT', () => {
   logger.info('SIGINT received — Graceful shutdown')
   server.close(() => { logger.info('Server closed'); process.exit(0) })
 })
+*/
 
 export default app

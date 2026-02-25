@@ -8,7 +8,7 @@ import { applySort, applyPagination } from '../../middleware/paginate'
 import type { PaginationParams, PaginatedResult, SortParams } from '../../middleware/paginate'
 import type { IBaseService } from './iBaseService'
 
-import { logger } from '../../utils/logger/index'
+import { logger } from '../../logger/index'
 
 /**
  * Classe générique centralisant les opérations CRUD sur fichier JSON.
@@ -66,16 +66,19 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
   // ── CRUD génériques ──
 
   async findAll(pagination: PaginationParams, sort: SortParams): Promise<PaginatedResult<T>> {
-    logger.service(`${this.resourceName}.findAll`, {
+    /* logger.service(`${this.resourceName}.findAll`, {
       page: pagination.page, limit: pagination.limit, sort,
-    })
+    }) */
+    // logger.info({ msg: `${this.resourceName}.findAll`, domain: 'service', payload: { id: 42 } })
+    logger.info({ msg: `${this.resourceName}.findAll`, domain: 'service', page: pagination.page, limit: pagination.limit, sortBy: sort.sortBy, sortDir: sort.sortDir })
     const data = await this.readAll()
     const sorted = applySort(data, sort)
     return applyPagination(sorted, pagination)
   }
 
   async findById(id: string): Promise<T> {
-    logger.debug(`${this.resourceName}.findById`, { id })
+    /* logger.debug(`${this.resourceName}.findById`, { id }) */
+    logger.info({ msg: `${this.resourceName}.findById`, domain: 'service', id: id })
     const data = await this.readAll()
     const found = data.find(item => item.id === id)
     if (!found) throw new NotFoundError(this.resourceName, id)
@@ -83,7 +86,8 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
   }
 
   async search(criteria: SearchCriteria, pagination: PaginationParams): Promise<PaginatedResult<T>> {
-    logger.debug(`${this.resourceName}.search`, { criteria, pagination })
+    /* logger.debug(`${this.resourceName}.search`, { criteria, pagination }) */
+    logger.info({ msg: `${this.resourceName}.search`, domain: 'service', criteria, page: pagination.page, limit: pagination.limit })
     const data = await this.readAll()
     const filtered = applyCriteria(data, { where: criteria.where, orderBy: criteria.orderBy })
     const params = {
@@ -100,7 +104,8 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
     const newItem = this.beforeCreate(data, newId)
     all.push(newItem)
     await this.writeAll(all)
-    logger.info(`${this.resourceName}.create`, { id: newId })
+    /* logger.info(`${this.resourceName}.create`, { id: newId }) */
+    logger.info({ msg: `${this.resourceName}.create`, domain: 'service', id: newId })
     return newItem
   }
 
@@ -110,7 +115,8 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
     if (index === -1) throw new NotFoundError(this.resourceName, id)
     all[index] = { ...all[index], ...data, id }  // id immuable
     await this.writeAll(all)
-    logger.info(`${this.resourceName}.update`, { id, fields: Object.keys(data) })
+    /* logger.info(`${this.resourceName}.update`, { id, fields: Object.keys(data) }) */
+    logger.info({ msg: `${this.resourceName}.update`, domain: 'service', id: id, fields: Object.keys(data) })
     return all[index]
   }
 
@@ -120,6 +126,7 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
     if (index === -1) throw new NotFoundError(this.resourceName, id)
     all.splice(index, 1)
     await this.writeAll(all)
-    logger.info(`${this.resourceName}.delete`, { id })
+    /* logger.info(`${this.resourceName}.delete`, { id }) */
+    logger.info({ msg: `${this.resourceName}.delete`, domain: 'service', id: id })
   }
 }

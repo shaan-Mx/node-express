@@ -17,8 +17,7 @@ import type { HttpMiddlewareOptions, InjectableField, LogEntry } from '../types'
 import { runWithContext } from './request-context'
 /*
 import { buffer } from '../core/buffer'
-Elle est effectivement inutile.
-le buffer est appelé indirectement via logHttpEntry, elle-même injectée par setHttpLogger depuis index.ts.
+inutile: le buffer est appelé indirectement via logHttpEntry, elle-même injectée par setHttpLogger depuis index.ts.
 */
 import { config } from '../config'
 
@@ -43,10 +42,13 @@ function buildHttpEntry(
   durationMs: number,
   inject: InjectableField[]
 ): LogEntry {
+  const dateNow = Date.now()
   const entry: LogEntry = {
     level: resolveLevel(res.statusCode),
     msg: 'http request',
-    timestamp: Date.now(),
+    timestamp: dateNow,
+    tsDate: new Date(dateNow).toISOString().slice(0,10),
+    tsTime: new Date(dateNow).toLocaleTimeString(),
     requestId,
     status: res.statusCode,
     duration: durationMs,
