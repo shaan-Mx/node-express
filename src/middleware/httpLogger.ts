@@ -4,13 +4,13 @@
 // Winston utilise morgan, Pino utilise pino-http (plus performant)
 import { config } from '../config/env'
 import type { RequestHandler } from "express"
+import type { Logger } from "pino"
+import type { HttpLogger } from "pino-http"
+import { IncomingMessage, ServerResponse } from 'http'
 
 const lib = config.log.lib || "pino"
 const isDev = config.nodeEnv !== "production"
 
-/* userAgent
-"userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-*/
 // ── Pino : pino-http ──────────────────────────────────────────────────────────
 async function createPinoHttpLogger(): Promise<RequestHandler> {
   const { pinoInstance } = await import("../utils/logger/logger.pino")
@@ -19,17 +19,25 @@ async function createPinoHttpLogger(): Promise<RequestHandler> {
     // lien avec le logger global pour partager la configuration et les streams
     logger: pinoInstance,
     // Champs inclus dans chaque log de requête
-    customLogLevel: (_req, res) => {
+    customLogLevel: (_req: IncomingMessage, res: ServerResponse) => {
       if (res.statusCode >= 500) return "error";
       if (res.statusCode >= 400) return "warn";
       return "info";
     },
-    customSuccessMessage: (req, res) => `http[${req.method} ${req.url} →${res.statusCode}]`,
-    customErrorMessage: (req, res, err) => `http[${req.method} ${req.url} →${res.statusCode}|${err.message}]`,
-    // Ignorer certaines url
-    autoLogging: {
-      ignore: (req) => req.url === "/health" || req.url === "/favicon.ico",
+    customSuccessMessage: (req: IncomingMessage, res: ServerResponse) => { 
+      const url = (req as any).originalUrl || req.url // originalUrl conserve l'URL complète
+      return `http[${req.method}${url} →${res.statusCode}]`
     },
+    customErrorMessage: (req: IncomingMessage, res: ServerResponse, err: Error) => {
+      const url = (req as any).originalUrl || req.url
+      return `http[${req.method} ${url} →${res.statusCode}|${err.message}]`
+    },
+    // Ignorer certaines url 
+    /*  gere par logger global via le serializer req
+    autoLogging: {
+      ignore: (req) => isUrlToIgnore(req.url),
+    },
+    */
     // Champs exposés dans le log
     serializers: {
       req: (req) => ({
@@ -40,9 +48,10 @@ async function createPinoHttpLogger(): Promise<RequestHandler> {
       res: (res) => ({
         statusCode: res.statusCode,
         time: res.responseTime, // ajouté par pino-http
+        // h: res.headers, // attention aux données sensibles dans les headers
       }),
     },
-  });
+  }) 
 }
 
 // ── Winston : morgan ──────────────────────────────────────────────────────────

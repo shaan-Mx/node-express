@@ -66,7 +66,7 @@ export abstract class BaseService<T extends { id: string }> implements IBaseServ
   // ── CRUD génériques ──
 
   async findAll(pagination: PaginationParams, sort: SortParams): Promise<PaginatedResult<T>> {
-    logger.debug(`${this.resourceName}.findAll`, {
+    logger.service(`${this.resourceName}.findAll`, {
       page: pagination.page, limit: pagination.limit, sort,
     })
     const data = await this.readAll()

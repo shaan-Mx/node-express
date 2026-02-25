@@ -26,7 +26,6 @@ const startedAt = new Date().toLocaleString()   // toISOString()
 const app = express()
 const PORT = config.port || 3000
 
-
 // HandleBars
 app.set('view engine', 'hbs')
 app.set("views", path.join(__dirname, "views"))
@@ -135,7 +134,8 @@ const server = app.listen(PORT, () => {
     ${logOs()}
   `)
    // ✅ logger structuré pour monitoring / alerting
-  logger.info('Server started', {port: config.port, env: config.nodeEnv})
+  //logger.info('Server started', {port: config.port, env: config.nodeEnv})
+  logger.warn('Server started', {port: config.port, env: config.nodeEnv})
 })
 
 // ── Gestion des erreurs process ───────────────────────────────────────────────
