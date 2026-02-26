@@ -6,45 +6,41 @@ Les hooks SIGTERM et SIGINT sont enregistrés à chaque appel de createLogger.
   si plusieurs loggers sont créés, les handlers s'accumulent.
   Dans l'usage nominal un seul logger est créé au boot, mais si besoin il suffit d'ajouter 
   un flag global pour n'enregistrer les hooks qu'une seule fois.
+
+>>> exporte le singleton logger
 */
 
-/*
-import { v4 as uuidv4 } from 'uuid'
-import { PINO_LEVELS } from './types'
-uuidv4 est utilisé dans middleware/express.ts, pas dans index.ts. 
-PINO_LEVELS n'est pas utilisé non plus — le filtrage par level est délégué à interface.ts.
-*/
 import type { Logger, LoggerOptions, LogEntry, FlushOptions, BufferStats, Transport } from './types'
+
 import { config } from './config'
 import { buffer } from './core/buffer'
 import { meta } from './core/meta'
 import { getRequestId } from './middleware/request-context'
 import { setHttpLogger } from './middleware/express'
-
-import { createConsoleTransport } from './transports/console'
-import { createLevelTransport } from './transports/file-level'
-import { createNamedTransport } from './transports/file-named'
+import { transports } from './transports/config'
 
 export { httpLogger } from './middleware/express'
 export { createConsoleTransport } from './transports/console'
 export { createLevelTransport } from './transports/file-level'
 export { createNamedTransport } from './transports/file-named'
-export type { LogConfig } from './config'
-export type { Transport, LogEntry, HttpMiddlewareOptions } from './types'
+
+export type { LogConfig, Transport, LogEntry, HttpMiddlewareOptions } from './types'
+
+//export { logger } from './instance'
 
 // ─── factory ───
 
 export function createLogger(options: LoggerOptions): Logger {
-  const transports: Transport[] = options.transports
+  const _transports: Transport[] = options.transports
 
   // ─── low level ───────────────────────────────────────────────────
 
   function log(entry: LogEntry): void {
-    if (!config.enabled) return
+    if (!config.log.enabled) return
     // enrichissement depuis le contexte de requête actif si disponible
     const requestId = entry.requestId ?? getRequestId()
     const enriched: LogEntry = requestId ? { ...entry, requestId } : entry
-    buffer.enqueue(enriched, transports)
+    buffer.enqueue(enriched, _transports)
   }
 
   // ─── by level ───
@@ -60,9 +56,9 @@ export function createLogger(options: LoggerOptions): Logger {
     level: LogEntry['level'],
     data: Omit<LogEntry, 'level' | 'timestamp'>
   ): LogEntry {
-    const { msg, ...rest } = data
+    const { msg, ...other } = data
     return {
-      ...rest,
+      ...other,
       msg: msg as string,  // forcer msg à être string, même si data.msg est de type unknown
       level,
       timestamp: Date.now() // posé ici, avant le fanout. Sinon (timestamp après le fanout): fausse les stats de latence.
@@ -70,7 +66,9 @@ export function createLogger(options: LoggerOptions): Logger {
   }
 
   // ─── injection as middleware HTTP ────────────────────────────────────
-
+  // appelé une seule fois au chargement du module
+  // si httpLogger est utilisé sans importer logger, isHttpLoggerReady() → false
+  // et un avertissement est émis dans le meta-log
   setHttpLogger((entry: LogEntry) => log(entry))
 
   // ─── shutdown ───
@@ -100,9 +98,7 @@ export function createLogger(options: LoggerOptions): Logger {
     flush().then(() => process.exit(0))
   })
 
-  // ─── public Interface ───
-
-  const logger: Logger = {
+  return {
     trace: (data) => log(buildEntry('trace', data)),
     debug: (data) => log(buildEntry('debug', data)),
     info:  (data) => log(buildEntry('info',  data)),
@@ -113,26 +109,8 @@ export function createLogger(options: LoggerOptions): Logger {
     flush,
     stats
   }
-
-  return logger
 }
 
-export const logger = createLogger({
-  transports: [
-    createConsoleTransport(),
-    createLevelTransport({ prefix: 'error-', level: 'error' }),
-    createLevelTransport({ prefix: 'info-',  level: 'info'  }),
-    createLevelTransport({ prefix: 'warn-',  level: 'warn'  }),
-    createNamedTransport({
-      name:    'trspHttp',
-      prefix:  'http-',
-      domains: ['http'],
-      levels:  ['info', 'warn', 'error']
-    }),
-    createNamedTransport({
-      name:    'trspService',
-      prefix:  'service-',
-      domains: ['service']
-    })
-  ]
-})
+// ─── Singleton ───
+
+export const logger = createLogger({ transports })

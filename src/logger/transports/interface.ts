@@ -15,12 +15,12 @@ import { config } from '../config'
 
 export function shouldReceive(transport: Transport, entry: LogEntry): boolean {
   // logging globalement désactivé
-  if (!config.enabled) return false
+  if (!config.log.enabled) return false
   // transport muté
   if (transport.muted) return false
   // level en dessous du minimum configuré
   const entryLevelIndex = PINO_LEVELS.indexOf(entry.level)
-  const minLevelIndex = PINO_LEVELS.indexOf(config.minLevel)
+  const minLevelIndex = PINO_LEVELS.indexOf(config.log.minLevel as PinoLevel)
   if (entryLevelIndex < minLevelIndex) return false
   // passed all checks
   return true

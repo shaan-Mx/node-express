@@ -2,48 +2,43 @@
 /*
 La config est chargée une seule fois au démarrage et exportée en singleton immutable. 
 Aucune relecture à chaud pour éviter les états incohérents.
+unique export: 
+  const config: LogConfig = loadConfig({
+    log: // actualiseée depuis logger.config.json + process.env
+    transports: // {} >>> sera construit depuis index.ts.buildTransports
+  })
 */
 
-import { config as conf } from '../config/env'
+import * as dotenv from 'dotenv'
 import * as path from 'node:path'
-
-import type { PinoLevel } from './types'
+import type { PinoLevel, LogConfig } from './types'
 import { PINO_LEVELS } from './types'
+// en ESM, les imports JSON sont en lecture seule (immuables) dans la plupart des environnements (Node.js, bundlers comme Vite, Webpack, etc.).
+import loggerConfigJson from './logger.config.json' 
 
-type TransportsMuted = Record<string, boolean>
-export interface LogConfig {
-  dir: string
-  enabled: boolean
-  console: boolean
-  file: boolean
-  maxFileSizeMb: number
-  bufferMaxEntries: number
-  env: 'development' | 'production'
-  minLevel: PinoLevel
-  transportMuted: TransportsMuted   // clé = nom du transport en lowercase
-}
+dotenv.config({ path: path.resolve(process.cwd(), '.env') }) // .env projet
 
 // ── Helpers ──
 
-function parseBool(value: string | undefined, fallback: boolean): boolean {
-  if (value === undefined) return fallback
-  return value.toLowerCase() !== 'false'
-}
-function parseNumber(value: string | undefined, fallback: number): number {
-  const parsed = Number(value)
-  return isNaN(parsed) ? fallback : parsed
-}
-
 function parseEnv(): 'development' | 'production' {
-  return conf.nodeEnv === 'production' ? 'production' : 'development'
+  return process.env.NODE_ENV  === 'production' ? 'production' : 'development'
 }
 
-function parseMinLevel(env: 'development' | 'production'): PinoLevel {
-  const raw = conf.log.minLevel?.toLowerCase()
-  if (raw && PINO_LEVELS.includes(raw as PinoLevel)) return raw as PinoLevel
+function parseMinLevel(raw: string, env: 'development' | 'production'): PinoLevel {
+  const lowerRaw = raw.toLowerCase()
+  if (PINO_LEVELS.includes(lowerRaw as PinoLevel)) return lowerRaw as PinoLevel
   return env === 'production' ? 'info' : 'trace'
 }
 
+function validateDir(dir: string): string {
+  if (!dir || dir.trim() === '') {
+    process.stderr.write('LOG_DIR is empty in \'logger.config.json\' — falling back to /logs\n')
+    return '/logs'
+  }
+  return path.resolve(dir)
+}
+
+/*
 function parseTransportMuting(): TransportsMuted {
   const prefix = 'logTransport'
   const suffix = 'Muted'
@@ -80,32 +75,25 @@ function parseTransportMuting_fromEnv(): Record<string, boolean> {
   }
   return result
 }
+*/
 
-function validateDir(dir: string): string {
-  if (!dir || dir.trim() === '') {
-    process.stderr.write('LOG_DIR is empty — falling back to /logs\n')
-    return '/logs'
-  }
-  return path.resolve(dir)
-}
-
-// ─── Loader ───────────────────────────────────────────────────────────────────
+// ─── loader ───
 
 function loadConfig(): LogConfig {
-  const dir = validateDir(conf.log.dir ?? '/logs')
+  const envFromProject = parseEnv()
   const config: LogConfig = {
-    dir,
-    //enabled: parseBool(conf.log.enabled, true),
-    enabled: conf.log.enabled ?? true,
-    console: conf.log.console ?? true,
-    file: conf.log.file ?? true,
-    maxFileSizeMb: conf.log.maxFileSizeMb ?? 50,
-    bufferMaxEntries: conf.log.bufferMaxEntries ?? 10000,
-    env: parseEnv(),
-    minLevel: parseMinLevel(parseEnv()),
-    transportMuted: parseTransportMuting()
+    log: {
+      env:                envFromProject,
+      dir:                validateDir(loggerConfigJson.log.dir ?? '/logs'),
+      enabled:            loggerConfigJson.log.enabled ?? true,
+      console:            loggerConfigJson.log.console ?? true,
+      file:               loggerConfigJson.log.file ?? true,
+      maxFileSizeMB:      loggerConfigJson.log.maxFileSizeMB ?? 50,
+      bufferMaxEntries:   loggerConfigJson.log.bufferMaxEntries ?? 10000,
+      minLevel:           parseMinLevel(loggerConfigJson.log.minLevel, envFromProject),
+    },
+    transports: []  // construit dans index.ts depuis loggerConfigJson.transports
   }
-
   return Object.freeze(config)     // immutable après chargement
 }
 

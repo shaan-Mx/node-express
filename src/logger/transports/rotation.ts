@@ -42,7 +42,7 @@ async function getFileSizeMb(filePath: string): Promise<number | null> {
 
 export async function resolveWritePath(prefix: string): Promise<string> {
   const date = buildDateStamp()
-  const dir = config.dir
+  const dir = config.log.dir
   let index = 0
   try {
     await fs.mkdir(dir, { recursive: true })
@@ -55,7 +55,7 @@ export async function resolveWritePath(prefix: string): Promise<string> {
     // fichier inexistant → on l'utilise directement
     if (sizeMb === null) return filePath
     // fichier sous la limite → on l'utilise
-    if (sizeMb < config.maxFileSizeMb) return filePath
+    if (sizeMb < config.log.maxFileSizeMB) return filePath
     // fichier plein → on passe à l'index suivant
     index++
     // garde-fou: éviter une boucle infinie si le disque est saturé

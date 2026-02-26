@@ -1,0 +1,32 @@
+{
+  "log": {
+    "enabled": true,
+    "dir": "./logs",
+    "console": true,
+    "file": true,
+    "minLevel": "trace",
+    "maxFileSizeMB": 50,
+    "bufferMaxEntries": 10000
+  },
+  "transports": [
+    { "type": "console", "muted": false },
+    { "type": "level", "prefix": "error-", "level": "error", "muted": false},
+    { "type": "level", "prefix": "info-", "level": "info", "muted": false },
+    { "type": "level", "prefix": "warn-", "level": "warn", "muted": false },
+    {
+      "type": "named",
+      "name": "trspHttp",
+      "muted": false,
+      "prefix": "http-",
+      "domains": ["http"],
+      "levels": ["info", "warn", "error"]
+    },
+    {
+      "type": "named",
+      "name": "trspService",
+      "muted": false,
+      "prefix": "service-",
+      "domains": ["service"]
+    }
+  ]
+}

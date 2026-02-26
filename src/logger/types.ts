@@ -2,10 +2,30 @@
 
 import type { Request } from 'express'
 
-//type PinoLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'
-//export const PINO_LEVELS: PinoLevel[] = ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
 export const PINO_LEVELS = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'] as const
 export type PinoLevel = typeof PINO_LEVELS[number]
+
+// --- Configuration ---
+export interface LogSettings {
+  env: 'development' | 'production'    
+  enabled: boolean
+  dir: string
+  console: boolean
+  file: boolean
+  minLevel: string
+  maxFileSizeMB: number
+  bufferMaxEntries: number
+}
+
+export type ConsoleTransportDef = ConsoleTransportOptions & { type: 'console' }
+export type LevelTransportDef = LevelTransportOptions   & { type: 'level' }
+export type NamedTransportDef = NamedTransportOptions   & { type: 'named' }
+export type TransportDef = ConsoleTransportDef | LevelTransportDef | NamedTransportDef
+
+export interface LogConfig {
+  log: LogSettings
+  transports: TransportDef[]
+}
 
 // --- LogEntry ---
 
@@ -26,12 +46,14 @@ export interface Transport {
   write(entry: LogEntry): Promise<void>
 }
 
+export interface ConsoleTransportOptions {
+  muted?: boolean
+}
 export interface LevelTransportOptions {
   prefix: string              // ex: 'error' → error2026-01-28.log
   level: PinoLevel
   muted?: boolean
 }
-
 export interface NamedTransportOptions {
   name: string                // ex: 'trspHttp'
   prefix: string              // base du nom de fichier
@@ -40,9 +62,7 @@ export interface NamedTransportOptions {
   muted?: boolean
 }
 
-export interface ConsoleTransportOptions {
-  muted?: boolean
-}
+
 
 // --- Middleware  ---
 

@@ -26,7 +26,7 @@ class LogBuffer {
   // ─── enqueue ───
 
   enqueue(entry: LogEntry, transports: Transport[]): void {
-    if (this.queue.length >= config.bufferMaxEntries) {
+    if (this.queue.length >= config.log.bufferMaxEntries) {
       this.dropCount++
 
       if (this.dropCount === 1 || this.dropCount % 1000 === 0) {

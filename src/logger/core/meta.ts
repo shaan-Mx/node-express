@@ -37,7 +37,7 @@ function buildEntry(level: MetaLevel, msg: string, err?: unknown): string {
 }
 
 function resolveMetaPath(): string {
-  return path.join(config.dir, 'logger-meta.log')
+  return path.join(config.log.dir, 'logger-meta.log')
 }
 
 function ensureDirSync(dir: string): void {
@@ -56,7 +56,7 @@ function write(level: MetaLevel, msg: string, err?: unknown): void {
   process.stderr.write(line)
   // une seule tentative d'écriture fichier — aucun retry, aucune rotation
   try {
-    ensureDirSync(config.dir)
+    ensureDirSync(config.log.dir)
     fs.appendFileSync(resolveMetaPath(), line)
   } catch {
     // échec silencieux — stderr est suffisant, pas de récursion possible

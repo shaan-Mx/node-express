@@ -1,4 +1,4 @@
-
+// src/index.ts
 //import './config/env' // ✅ EN PREMIER, avant TOUT autre import
 import { config } from './config/env'
 

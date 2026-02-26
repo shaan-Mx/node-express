@@ -11,15 +11,12 @@ domain: 'http' est injecté automatiquement dans chaque entrée HTTP
 npm install uuid
 npm install --save-dev @types/uuid
 */
+import { config } from '../config'
 import type { RequestHandler, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import type { HttpMiddlewareOptions, InjectableField, LogEntry } from '../types'
 import { runWithContext } from './request-context'
-/*
-import { buffer } from '../core/buffer'
-inutile: le buffer est appelé indirectement via logHttpEntry, elle-même injectée par setHttpLogger depuis index.ts.
-*/
-import { config } from '../config'
+import { meta } from '../core/meta'
 
 // ─── default fields to inject ───
 
@@ -62,13 +59,31 @@ function buildHttpEntry(
   return entry
 }
 
+// ─── delaying logger injection ───
+// evite la dépendance circulaire middleware → index → middleware
+// le logger est injecté une seule fois au démarrage via setHttpLogger
+
+//let logHttpEntry: (entry: LogEntry) => void = () => {}
+const noopHttpLogger = () => {}
+let logHttpEntry: (entry: LogEntry) => void = noopHttpLogger
+export function setHttpLogger(fn: (entry: LogEntry) => void): void {
+  // appelé une seule fois au boot dans logger/index.ts/createLogger
+  logHttpEntry = fn
+}
+export function isHttpLoggerReady(): boolean {
+  return logHttpEntry !== noopHttpLogger
+}
+
 // ─── middleware ───
 
 export function httpLogger(options: HttpMiddlewareOptions = {}): RequestHandler {
   const resolveRequestId = options.resolveRequestId ?? (() => uuidv4())
   const inject = options.inject ?? DEFAULT_INJECT
   return (req, res, next) => {
-    if (!config.enabled) return next()
+    if (!config.log.enabled) return next()
+    if (!isHttpLoggerReady()) {
+      meta.warn('httpLogger used before setHttpLogger was called — import { logger } from ./logger first')
+    }
     const requestId = resolveRequestId(req)
     const start = Date.now()
     runWithContext({ requestId }, () => {
@@ -88,14 +103,4 @@ export function httpLogger(options: HttpMiddlewareOptions = {}): RequestHandler 
       next()
     })
   }
-}
-
-// ─── delaying logger injection ───
-// evite la dépendance circulaire middleware → index → middleware
-// le logger est injecté une seule fois au démarrage via setHttpLogger
-
-let logHttpEntry: (entry: LogEntry) => void = () => {}
-
-export function setHttpLogger(fn: (entry: LogEntry) => void): void {
-  logHttpEntry = fn
 }

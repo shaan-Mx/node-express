@@ -23,12 +23,12 @@ class FileLevelTransport implements Transport {
     this.level  = options.level
     this.prefix = options.prefix
     this.name   = `level-${options.level}`
-    this.muted  = options.muted ?? config.transportMuted[options.prefix.toLowerCase()] ?? false
+    this.muted  = options.muted ?? false
   }
 
   async write(entry: LogEntry): Promise<void> {
     if (!shouldReceiveLevel(this, entry)) return
-    if (!config.file) return
+    if (!config.log.file) return
     let filePath: string | undefined
     try {
       filePath = await resolveWritePath(this.prefix)

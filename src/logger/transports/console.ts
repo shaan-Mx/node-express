@@ -58,7 +58,7 @@ function formatProd(entry: LogEntry): string {
 }
 
 function format(entry: LogEntry): string {
-  return config.env === 'development' ? formatDev(entry) : formatProd(entry)
+  return config.log.env === 'development' ? formatDev(entry) : formatProd(entry)
 }
 
 // ─── transport ───
@@ -67,11 +67,11 @@ class ConsoleTransport implements Transport {
   readonly name = 'console'
   muted: boolean
   constructor(options: ConsoleTransportOptions = {}) {
-    this.muted = options.muted ?? config.transportMuted['console'] ?? false
+    this.muted = options.muted ?? false
   }
   async write(entry: LogEntry): Promise<void> {
     if (!shouldReceive(this, entry)) return
-    if (!config.console) return
+    if (!config.log.console) return
     const line = format(entry)
     // error et fatal → stderr, reste → stdout
     if (entry.level === 'error' || entry.level === 'fatal') {

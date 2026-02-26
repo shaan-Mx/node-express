@@ -25,12 +25,12 @@ class FileNamedTransport implements Transport {
     this.prefix  = options.prefix
     this.domains = options.domains
     this.levels  = options.levels
-    this.muted   = options.muted ?? config.transportMuted[options.name.toLowerCase()] ?? false
+    this.muted   = options.muted ?? false
   }
 
   async write(entry: LogEntry): Promise<void> {
     if (!shouldReceiveNamed(this, entry)) return
-    if (!config.file) return
+    if (!config.log.file) return
 
     let filePath: string | undefined
 
