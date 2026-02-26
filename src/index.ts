@@ -11,8 +11,7 @@ import { fileURLToPath } from "url"
 
 // see Phase 1 - 7bis
 // updated: errorHandler (OK), baseService (OK)
-import { logger, httpLogger } from './logger'
-import testLibLoggerRouter from "./logger/testLibRouting"
+import { logger, httpLogger } from '@shaan_mex/logger'
 
 // import { logger } from './utils/logger/index'
 // import { createHttpLogger } from './middleware/httpLogger'
@@ -71,7 +70,10 @@ app.use(globalRateLimiter)
 // const httpLogger = await createHttpLogger()
 //app.use(httpLogger)     
 // 7bis. === TEST ===. logger personalisé
-app.use(httpLogger({ inject: ['method', 'url'] }))
+app.use(httpLogger({
+  inject:  ['method', 'url'],
+  exclude: ['/_pull']
+}))
 
 // ========================================
 // 🔒 ROUTES 
@@ -100,7 +102,7 @@ app.get("/status", viewStatus)
 app.get("/api/status", viewStatus)
 
 // library logger tests 
-app.use("/test", testLibLoggerRouter)
+//app.use("/test", testLibLoggerRouter)
 // ========================================
 // ✅ PHASE 2: GESTION D'ERREURS
 // ========================================

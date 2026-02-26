@@ -8,7 +8,7 @@ import { applySort, applyPagination } from '../../middleware/paginate'
 import type { PaginationParams, PaginatedResult, SortParams } from '../../middleware/paginate'
 import type { IBaseService } from './iBaseService'
 
-import { logger } from '../../logger/index'
+import { logger } from '@shaan_mex/logger'
 
 /**
  * Classe générique centralisant les opérations CRUD sur fichier JSON.

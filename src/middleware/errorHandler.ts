@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction, ErrorRequestHandler } from 'expre
 import { AppError } from '../utils/AppError'
 import { sendError, createError } from '../utils/response'
 import { ErrorCode } from '../types/api'
-import { logger } from '../logger'
+import { logger } from '@shaan_mex/logger'
 
 
 /**
