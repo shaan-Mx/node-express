@@ -1,3 +1,4 @@
+// NODE-EXPRESS
 // src/index.ts
 //import './config/env' // ✅ EN PREMIER, avant TOUT autre import
 import { config } from './config/env'
@@ -21,6 +22,8 @@ import { errorHandler, notFoundHandler } from "./middleware/errorHandler"
 
 import productsRouter from "./routes/products"
 import usersRouter from "./routes/users"
+import logPullerRouter from './routes/logPuller.js'
+
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -64,8 +67,8 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 // 5. Sanitization des inputs
 app.use(sanitizeInput)
-// 6. Rate limiting global
-app.use(globalRateLimiter)
+// 6. Rate limiting global  >>> deplace apres logPullRouter
+// app.use(globalRateLimiter)
 // 7. logger - HTTP logger
 // const httpLogger = await createHttpLogger()
 //app.use(httpLogger)     
@@ -82,6 +85,13 @@ app.use(httpLogger({
 app.use("/api/products", writeRateLimiter, productsRouter)
 // Users Routes (avec rate limiter d'écriture)
 app.use("/api/users", writeRateLimiter, usersRouter)
+// après les autres routes ?
+// ✅ avant notFoundHandler
+// ✅ AVANT app.use(globalRateLimiter)
+app.use('/_pull', logPullerRouter)
+// rate limiting global — après /_pull
+app.use(globalRateLimiter)
+
 
 // config
 app.get(['/api/config/data','/config/data'], (req, res) => {
@@ -103,9 +113,7 @@ app.get("/api/status", viewStatus)
 
 // library logger tests 
 //app.use("/test", testLibLoggerRouter)
-// ========================================
-// ✅ PHASE 2: GESTION D'ERREURS
-// ========================================
+
 
 // 404 - Route non trouvée (doit être après toutes les routes)
 app.use(notFoundHandler)
@@ -133,6 +141,7 @@ const logOs = () => {
 }
 const server = app.listen(PORT, () => {
   console.log(`✅ Server API
+    PID             :${process.pid} 
     http://localhost:${PORT}
     🔒 Security   : Helmet ✓, Rate Limiter ✓
     🛡️  Protection : Sanitization ✓, Error Handler ✓

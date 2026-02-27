@@ -24,24 +24,8 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || 'development',
   dataSource: process.env.DATA_SOURCE || 'local',
   validationLib: (process.env.VALIDATION_LIB || 'zod') as ValidationLibrary,
-  log: {
-    enabled: (process.env.LOG_ENABLED || 'false') === 'true',
-    //
-    lib: (process.env.LOG || 'pino') as LoggerLib,
-    toFile: process.env.LOG_TO_FILE === 'true',
-    toConsole: process.env.LOG_TO_CONSOLE === 'true',
-    folder: process.env.LOG_FOLDER || 'logs',
-    //
-    dir: process.env.LOG_DIR || 'logs',
-    console: process.env.LOG_CONSOLE === 'true',
-    file: process.env.LOG_FILE === 'true',
-    minLevel: process.env.LOG_MIN_LEVEL || 'trace',
-    maxFileSizeMb: parseInt(process.env.LOG_MAX_FILE_SIZE_MB || '50'),
-    bufferMaxEntries: parseInt(process.env.LOG_BUFFER_MAX_ENTRIES || '10000'),
-    logTransportErrorMuted: process.env.LOG_TRANSPORT_ERROR_MUTED === 'true',
-    logTransportInfoMuted: process.env.LOG_TRANSPORT_INFO_MUTED === 'true',
-    logTransportHttpMuted: process.env.LOG_TRANSPORT_HTTP_MUTED === 'true',
-    logTransportServiceMuted: process.env.LOG_TRANSPORT_SERVICE_MUTED === 'true',
+  logAnalyzer: {
+    pullSecret: process.env.LOG_ANLZ_PULL_SECRET || 'xxx_undefined_xxx',
   },
   corsOrigin: process.env.CORS_ORIGIN || '*',
   productIdMethod: process.env.PRODUCT_ID_METHOD || 'nanoid',
